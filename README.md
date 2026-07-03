@@ -1,1 +1,8 @@
-# Backend Onboarding Project - Hono + TypeScript
+```
+npm install
+npm run dev
+```
+
+```
+open http://localhost:3000
+```
