@@ -1,30 +1,20 @@
-import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
+import { Hono } from 'hono';
+import { serve } from '@hono/node-server';
+import userRoute from './routes/userRoute.js';
 
-const app = new Hono()
-const server = serve(app)
+const app = new Hono();
 
-app.get('/', (c) => {
-  return c.text('Hello Node.js!')
-})
+// Daftarkan route yang sudah kita buat
+// Semua request yang diawali '/users' akan diarahkan ke userRoute
+app.route('/users', userRoute);
+
+// Endpoint Health Check dasar tetap dipertahankan
+app.get('/health', (c) => c.json({ status: 'Server is healthy' }, 200));
+
+const port = 3000;
+console.log(`Server is running on port ${port}`);
 
 serve({
   fetch: app.fetch,
-  port: 8787
-}, (info) => {
-  console.log(`Server is running on http://localhost:${info.port}`)
-})
-
-process.on('SIGINT', () => {
-  server.close()
-  process.exit(0)
-})
-process.on('SIGTERM', () => {
-  server.close((err) => {
-    if (err) {
-      console.error(err)
-      process.exit(1)
-    }
-    process.exit(0)
-  })
-})
+  port
+});
